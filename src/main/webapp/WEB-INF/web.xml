@@ -5,15 +5,8 @@
          version="4.0">
 
 
-
-    <servlet>
-        <servlet-name>MainServlet</servlet-name>
-        <servlet-class>edu.school.cinema.servlets.MainServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>MainServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+    <listener>
+        <listener-class>edu.school21.cinema.listeners.AppContextListener</listener-class>
+    </listener>
 
 </web-app>

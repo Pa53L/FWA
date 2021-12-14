@@ -1,4 +1,4 @@
-package edu.school.cinema.servlets;
+package edu.school21.cinema.servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,6 +16,7 @@ public class MainServlet extends HttpServlet {
         resp.setContentType("text/html");
         PrintWriter printWriter = resp.getWriter();
         printWriter.write("Hello, MR. Anderson!");
+        printWriter.write("Hello, MS. Anderson!");
         printWriter.close();
     }
 }
