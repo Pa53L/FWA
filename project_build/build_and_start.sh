@@ -5,5 +5,6 @@ if [[ $1 == "build" ]]; then
 fi
 
 cd project_build
+rm -rf postgres_data
 
 docker-compose up --build
