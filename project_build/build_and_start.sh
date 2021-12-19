@@ -1,3 +1,4 @@
+rm -rf postgres_data
 cd ..
 
 if [[ $1 == "build" ]]; then
