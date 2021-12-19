@@ -1,8 +1,9 @@
 package edu.school21.cinema.servlets;
 
 import edu.school21.cinema.repositories.UserRepository;
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.http.HttpServlet;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpServlet;
 
 public class UsersServlet extends HttpServlet {
     private UserRepository userService;
