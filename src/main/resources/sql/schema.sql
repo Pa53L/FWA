@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS users;
-
-CREATE TABLE users(
+CREATE TABLE IF NOT EXISTS users(
     id              SERIAL CONSTRAINT users_pkey PRIMARY KEY,
     first_name      VARCHAR(80) NOT NULL,
     last_name       VARCHAR(80) NOT NULL,

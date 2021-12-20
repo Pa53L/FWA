@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 
 @Service
 @ComponentScan("edu.school21.cinema")
-@PropertySource("../../../../../webapp/WEB-INF/application.properties")
+@PropertySource("classpath:../webapp/WEB-INF/application.properties")
 public class AppConfig {
 
     @Value("${db.driver}")
@@ -34,6 +34,8 @@ public class AppConfig {
     private String dbUser;
     @Value("${db.password}")
     private String dbPassword;
+
+
 
     @Bean
     public PasswordEncoder encoder() {

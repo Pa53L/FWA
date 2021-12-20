@@ -4,6 +4,8 @@ services:
     image: postgres:12.4
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+      - ../src/main/resources/sql/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ../src/main/resources/sql/data.sql:/docker-entrypoint-initdb.d/2-data.sql
     container_name: db
     ports:
       - '5432:5432'

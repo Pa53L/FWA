@@ -1,7 +1,9 @@
 package edu.school21.cinema.servlets;
 
+import edu.school21.cinema.models.User;
 import edu.school21.cinema.repositories.UserRepository;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -12,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import edu.school21.cinema.services.UserService;
 import org.springframework.context.ApplicationContext;
+
+import java.io.IOException;
 
 @WebServlet("/signin")
 public class SignIn extends HttpServlet {
@@ -25,9 +29,11 @@ public class SignIn extends HttpServlet {
         this.userService = springContext.getBean(UserService.class);
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, java.io.IOException {
-        response.setContentType("text/html");
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, IOException {
+        resp.setContentType("text/html");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/html/signIn.html");
+        dispatcher.forward(req, resp);
     }
 
 }
