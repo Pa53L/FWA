@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 
 @Service
 @ComponentScan("edu.school21.cinema")
-@PropertySource("classpath:../webapp/WEB-INF/application.properties")
+@PropertySource("classpath:../application.properties")
 public class AppConfig {
 
     @Value("${db.driver}")
