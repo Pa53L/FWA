@@ -1,9 +1,7 @@
 rm -rf postgres_data
 cd ..
 
-if [[ $1 == "build" ]]; then
-  mvn clean package
-fi
+mvn clean package
 
 cd project_build
 
