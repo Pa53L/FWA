@@ -1,30 +1,21 @@
 package edu.school21.cinema.config;
 
 import edu.school21.cinema.repositories.UserRepository;
-import edu.school21.cinema.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import edu.school21.cinema.repositories.UserRepositoryImpl;
+import edu.school21.cinema.models.UserRowMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import javax.naming.Context;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-@Service
+@Component
 @ComponentScan("edu.school21.cinema")
 @PropertySource("classpath:../application.properties")
 public class AppConfig {
@@ -37,8 +28,6 @@ public class AppConfig {
     private String dbUser;
     @Value("${db.password}")
     private String dbPassword;
-
-
 
     @Bean
     public PasswordEncoder encoder() {
@@ -58,14 +47,23 @@ public class AppConfig {
         return dataSource;
     }
 
-
     @Bean
-    public JdbcTemplate getJDBCTemplate(DataSource ds) {
-        return  new JdbcTemplate(ds, false);
+    public UserRowMapper getRowMapper() {
+        return new UserRowMapper();
     }
 
     @Bean
-    public UserService getUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        return new UserService(userRepository, passwordEncoder);
+    public JdbcTemplate getJDBCTemplate(DataSource dataSource) {
+        return  new JdbcTemplate(dataSource, false);
     }
+
+    @Bean
+    public UserRepository getUserRepository(JdbcTemplate template, UserRowMapper mapper) {
+        return new UserRepositoryImpl(template, mapper);
+    }
+
+//    @Bean
+//    public UserService getUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+//        return new UserServiceImpl(userRepository, passwordEncoder);
+//    }
 }

@@ -2,61 +2,70 @@ package edu.school21.cinema.repositories;
 
 import edu.school21.cinema.models.User;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import edu.school21.cinema.models.UserRowMapper;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Optional;
-
-@Repository
 public class UserRepositoryImpl implements UserRepository {
 
     private final JdbcTemplate template;
+    private final UserRowMapper rowMapper;
 
-    @Autowired
-    public UserRepositoryImpl(JdbcTemplate template) {
+    public UserRepositoryImpl(JdbcTemplate template, UserRowMapper rowMapper) {
         this.template = template;
+        this.rowMapper = rowMapper;
     }
 
     @Override
-    public User getUserById(int id) {
-        String SELECT_BY_ID = "SELECT * FROM users WHERE Id = ?";
-        return template.queryForObject(SELECT_BY_ID, this::mapRowToUser, id);
+    public User getUserById(long id) {
+        String SELECT_BY_ID = "SELECT * FROM users WHERE id = ?";
+        try {
+            return template.queryForObject(SELECT_BY_ID, rowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
-    public void save(User user) {
-        String UPDATE_USER = "INSERT INTO users(first_name, last_name, phone_number, password) " +
-                "VALUES(?, ?, ?, ?)";
-        template.update(UPDATE_USER,
-                user.getFirstName(),
-                user.getLastName(),
-                user.getPhoneNumber(),
-                user.getPassword());
+    public User getUserByPhoneNumber(String phoneNumber) {
+        String SELECT_BY_PHONE_NUMBER = "SELECT * FROM users WHERE phone_number = ?";
+        try {
+            return template.queryForObject(SELECT_BY_PHONE_NUMBER, rowMapper, phoneNumber);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
-    public User getByPhoneNumber(String phoneNumber) {
-        return null;
+    public void saveUser(User user) {
+        String SAVE_USER = "INSERT INTO users(first_name, last_name, phone_number, password) VALUES(?, ?, ?, ?)";
+        try {
+            template.execute(SAVE_USER, (PreparedStatementCallback<? extends Object>) ps -> {
+                ps.setString(1, user.getFirstName());
+                ps.setString(2, user.getLastName());
+                ps.setString(3, user.getPhoneNumber());
+                ps.setString(4, user.getPassword());
+                return ps.execute();
+            });
+        } catch (DuplicateKeyException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
-    private User mapRowToUser(ResultSet resultSet, int rowNumber) throws SQLException {
-        User user = new User();
-        user.setId(resultSet.getLong("id"));
-        user.setFirstName(resultSet.getString("first_name"));
-        user.setFirstName(resultSet.getString("last_name"));
-        user.setPhoneNumber(resultSet.getString("phone_number"));
-        user.setPassword(resultSet.getString("password"));
-
-        return user;
+    public void updateUser(User user) {
+        String UPDATE_USER = "UPDATE users SET first_name = ?, last_name = ?, phone_number = ? WHERE id = ?";
+        try {
+            template.execute(UPDATE_USER, (PreparedStatementCallback<? extends Object>) ps -> {
+                ps.setString(1, user.getFirstName());
+                ps.setString(2, user.getLastName());
+                ps.setString(3, user.getPhoneNumber());
+                ps.setLong(4, user.getId());
+                return ps.execute();
+            });
+        } catch (DuplicateKeyException e) {
+            System.out.println(e.getMessage());
+        }
     }
-
 }
