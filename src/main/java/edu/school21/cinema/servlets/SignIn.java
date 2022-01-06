@@ -18,7 +18,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 
-@WebServlet("/signin")
+@WebServlet("/signIn")
 public class SignIn extends HttpServlet {
 
     private UserService userService;

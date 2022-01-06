@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet("/signup")
+@WebServlet("/signUp")
 public class SignUp extends HttpServlet {
     private UserService userService;
 
