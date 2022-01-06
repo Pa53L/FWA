@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getProfile(String phoneNumber) {
-        return repository.getUserByPhoneNumber(phoneNumber);
+        return repository.getUserByPhoneNumber(clearPhoneNumber(phoneNumber));
     }
 
     private String clearPhoneNumber(String phoneNumber) {

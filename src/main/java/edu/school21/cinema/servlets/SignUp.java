@@ -1,6 +1,7 @@
 package edu.school21.cinema.servlets;
 
 
+import edu.school21.cinema.models.User;
 import edu.school21.cinema.repositories.UserRepository;
 import edu.school21.cinema.services.UserService;
 import org.springframework.context.ApplicationContext;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet("/signUp")
+@WebServlet({"/signUp", "/signup"})
 public class SignUp extends HttpServlet {
     private UserService userService;
 
@@ -30,20 +31,20 @@ public class SignUp extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, java.io.IOException {
         response.setContentType("text/html");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/html/signup.html");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/html/signUp.html");
         dispatcher.forward(request, response);
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String user = request.getParameter("phonenumber");
+        String phoneNumber = request.getParameter("phonenumber");
         String pass = request.getParameter("userpass");
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");
-        if (userService.signUp(user, pass, firstName, lastName)) {
+        if (userService.signUp(phoneNumber, pass, firstName, lastName)) {
+            User sessionUser = userService.getProfile(phoneNumber);
             HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            session.setAttribute("auth", user);
+            session.setAttribute("user", sessionUser);
             response.sendRedirect("profile");
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

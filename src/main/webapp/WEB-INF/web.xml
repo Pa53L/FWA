@@ -8,5 +8,13 @@
     <listener>
         <listener-class>edu.school21.cinema.listeners.AppContextListener</listener-class>
     </listener>
+<!--    <filter>-->
+<!--        <filter-name>AppFilter</filter-name>-->
+<!--        <filter-class>edu.school21.cinema.filters.AppFilter</filter-class>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>AppFilter</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
 
 </web-app>

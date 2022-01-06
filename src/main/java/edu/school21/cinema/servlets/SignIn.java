@@ -18,7 +18,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 
-@WebServlet("/signIn")
+@WebServlet({"/signIn", "/signin"})
 public class SignIn extends HttpServlet {
 
     private UserService userService;
@@ -33,21 +33,21 @@ public class SignIn extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, IOException {
         resp.setContentType("text/html");
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/html/signin.html");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/html/signIn.html");
         dispatcher.forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String user = request.getParameter("phonenumber");
+        String phoneNumber = request.getParameter("phonenumber");
         String pass = request.getParameter("userpass");
-        if (userService.signIn(user, pass)) {
+        if (userService.signIn(phoneNumber, pass)) {
+            User sessionUser = userService.getProfile(phoneNumber);
             HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-            session.setAttribute("auth", user);
+            session.setAttribute("user", sessionUser);
             response.sendRedirect("profile");
         } else {
-            response.sendRedirect("signin");
+            response.sendRedirect("signIn");
         }
     }
 
