@@ -16,15 +16,6 @@ import java.io.PrintWriter;
 
 @WebServlet("/profile")
 public class Profile extends HttpServlet {
-    private UserService userService;
-
-    @Override
-    public void init(ServletConfig config) {
-        ServletContext context = config.getServletContext();
-        ApplicationContext springContext = (ApplicationContext) context.getAttribute("springContext");
-        this.userService = springContext.getBean(UserService.class);
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, IOException {
         resp.setContentType("text/html");

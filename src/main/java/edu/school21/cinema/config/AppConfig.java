@@ -48,22 +48,8 @@ public class AppConfig {
     }
 
     @Bean
-    public UserRowMapper getRowMapper() {
-        return new UserRowMapper();
-    }
-
-    @Bean
     public JdbcTemplate getJDBCTemplate(DataSource dataSource) {
         return  new JdbcTemplate(dataSource, false);
     }
 
-    @Bean
-    public UserRepository getUserRepository(JdbcTemplate template, UserRowMapper mapper) {
-        return new UserRepositoryImpl(template, mapper);
-    }
-
-//    @Bean
-//    public UserService getUserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-//        return new UserServiceImpl(userRepository, passwordEncoder);
-//    }
 }

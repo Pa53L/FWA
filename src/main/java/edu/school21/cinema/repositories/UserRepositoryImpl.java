@@ -7,7 +7,9 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserRepositoryImpl implements UserRepository {
 
     private final JdbcTemplate template;

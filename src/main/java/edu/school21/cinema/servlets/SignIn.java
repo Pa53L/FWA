@@ -1,7 +1,6 @@
 package edu.school21.cinema.servlets;
 
 import edu.school21.cinema.models.User;
-import edu.school21.cinema.repositories.UserRepository;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -20,7 +19,6 @@ import java.io.IOException;
 
 @WebServlet({"/signIn", "/signin"})
 public class SignIn extends HttpServlet {
-
     private UserService userService;
 
     @Override
@@ -50,6 +48,5 @@ public class SignIn extends HttpServlet {
             response.sendRedirect("signIn");
         }
     }
-
 }
 
