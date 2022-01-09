@@ -17,10 +17,10 @@ public class AppFilter implements Filter {
 
         String uri = req.getRequestURI();
         HttpSession session = req.getSession(false);
-        if(session == null && !(uri.endsWith("html") || uri.endsWith("signin") || uri.endsWith("signIn")
-                || uri.endsWith("signup") || uri.endsWith("signUp"))){
+        if (session == null && !(uri.endsWith("html") || uri.endsWith("signin") || uri.endsWith("signIn")
+                || uri.endsWith("signup") || uri.endsWith("signUp"))) {
             res.sendRedirect("/WEB-INF/html/signIn.html");
-        }else{
+        } else {
             filterChain.doFilter(servletRequest, servletResponse);
         }
     }

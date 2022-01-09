@@ -3,6 +3,7 @@ package edu.school21.cinema.repositories;
 import edu.school21.cinema.models.User;
 
 import edu.school21.cinema.models.UserRowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,6 +16,7 @@ public class UserRepositoryImpl implements UserRepository {
     private final JdbcTemplate template;
     private final UserRowMapper rowMapper;
 
+    @Autowired
     public UserRepositoryImpl(JdbcTemplate template, UserRowMapper rowMapper) {
         this.template = template;
         this.rowMapper = rowMapper;
