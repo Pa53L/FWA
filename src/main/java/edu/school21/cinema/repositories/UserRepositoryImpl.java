@@ -59,7 +59,7 @@ public class UserRepositoryImpl implements UserRepository {
                 User user = new User();
                 user.setId(resultSet.getLong("id"));
                 user.setFirstName(resultSet.getString("first_name"));
-                user.setFirstName(resultSet.getString("last_name"));
+                user.setLastName(resultSet.getString("last_name"));
                 user.setPhoneNumber(resultSet.getString("phone_number"));
                 user.setPassword(resultSet.getString("password"));
                 return user;

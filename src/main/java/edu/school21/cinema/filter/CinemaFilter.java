@@ -18,7 +18,7 @@ public class CinemaFilter implements Filter {
         HttpSession session = ((HttpServletRequest) servletRequest).getSession();
         String requestURI = ((HttpServletRequest) servletRequest).getRequestURI();
 //        if ((requestURI.contains("signIn") || requestURI.contains("signUp")) && session.getAttribute("user") != null) {
-//        ((HttpServletResponse)servletResponse).sendRedirect("profile");
+//            ((HttpServletResponse)servletResponse).sendRedirect("profile");
 //            return;
 //        }
 //        else {
@@ -27,7 +27,6 @@ public class CinemaFilter implements Filter {
 //                return;
 //            }
 //        }
-//        return;
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
