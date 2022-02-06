@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebServlet({"/signUp", "/signup"})
+@WebServlet(urlPatterns = {"/signup"})
 public class SignUp extends HttpServlet {
     private UserService userService;
 
@@ -31,8 +31,9 @@ public class SignUp extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, java.io.IOException {
         response.setContentType("text/html");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/html/signUp.html");
-        dispatcher.forward(request, response);
+        request.setCharacterEncoding("UTF-8");
+        RequestDispatcher dis = request.getRequestDispatcher("WEB-INF/jsp/signup.jsp");
+        dis.forward(request, response);
     }
 
     @Override
@@ -41,10 +42,11 @@ public class SignUp extends HttpServlet {
         String pass = request.getParameter("userpass");
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");
-        if (userService.signUp(phoneNumber, pass, firstName, lastName)) {
+        if (userService.signUp(phoneNumber, pass, firstName, lastName, request.getRemoteAddr())) {
             User sessionUser = userService.getProfile(phoneNumber);
             HttpSession session = request.getSession();
             session.setAttribute("user", sessionUser);
+            session.setAttribute("auth", userService.getAuth(sessionUser.getPhoneNumber()));
             response.sendRedirect("profile");
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

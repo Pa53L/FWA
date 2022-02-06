@@ -7,16 +7,21 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter("/*")
+@WebFilter({"/profile", "/signin", "/signup"})
 public class AppFilter implements Filter {
+
+    @Override
+    public void init(FilterConfig filterConfig) {
+    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpSession session = ((HttpServletRequest) servletRequest).getSession();
         String requestURI = ((HttpServletRequest) servletRequest).getRequestURI();
-        if (requestURI.startsWith("/signIn") || requestURI.startsWith("/signUp")) {
+        if ((requestURI.contains("signin") || requestURI.contains("signup"))) {
             if (session.getAttribute("user") != null) {
-                ((HttpServletResponse)servletResponse).sendRedirect("/profile");
+//                filterChain.doFilter(servletRequest, servletResponse);
+                ((HttpServletResponse)servletResponse).sendRedirect("profile");
                 return;
             }
         } else {
@@ -26,5 +31,8 @@ public class AppFilter implements Filter {
             }
         }
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+    @Override
+    public void destroy() {
     }
 }

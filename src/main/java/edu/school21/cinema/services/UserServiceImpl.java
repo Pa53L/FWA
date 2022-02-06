@@ -1,10 +1,13 @@
 package edu.school21.cinema.services;
 
+import edu.school21.cinema.models.AuthHistory;
 import edu.school21.cinema.models.User;
 import edu.school21.cinema.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,7 +21,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean signUp(String phoneNumber, String password, String firstName, String lastName) {
+    public boolean signUp(String phoneNumber, String password, String firstName, String lastName, String address) {
         if (!phoneNumber.isEmpty() && !password.isEmpty()) {
             String tmpNumber = clearPhoneNumber(phoneNumber);
             if (repository.getUserByPhoneNumber(tmpNumber) == null) {
@@ -28,6 +31,7 @@ public class UserServiceImpl implements UserService {
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 repository.saveUser(user);
+                repository.addSignUpInfo(user, address);
                 return true;
             }
         }
@@ -35,9 +39,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean signIn(String phoneNumber, String password) {
+    public boolean signIn(String phoneNumber, String password, String address) {
         if (!phoneNumber.isEmpty() && !password.isEmpty()) {
             User user = repository.getUserByPhoneNumber(clearPhoneNumber(phoneNumber));
+            if (user != null) repository.addSignInInfo(user, address);
             return user != null && encoder.matches(password, user.getPassword());
         }
         return false;
@@ -63,5 +68,10 @@ public class UserServiceImpl implements UserService {
             }
         }
         return tmpNumber;
+    }
+
+    @Override
+    public List<AuthHistory> getAuth(String login) {
+        return repository.getAuthInfo(login);
     }
 }

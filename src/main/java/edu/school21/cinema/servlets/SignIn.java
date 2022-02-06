@@ -17,7 +17,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 
-@WebServlet({"/signIn", "/signin"})
+@WebServlet(urlPatterns = {"/signin"})
 public class SignIn extends HttpServlet {
     private UserService userService;
 
@@ -29,23 +29,25 @@ public class SignIn extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/html/signIn.html");
-        dispatcher.forward(req, resp);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+        request.setCharacterEncoding("UTF-8");
+        RequestDispatcher dis = request.getRequestDispatcher("WEB-INF/jsp/signin.jsp");
+        dis.forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String phoneNumber = request.getParameter("phonenumber");
         String pass = request.getParameter("userpass");
-        if (userService.signIn(phoneNumber, pass)) {
+        if (userService.signIn(phoneNumber, pass, request.getRemoteAddr())) {
             User sessionUser = userService.getProfile(phoneNumber);
             HttpSession session = request.getSession();
             session.setAttribute("user", sessionUser);
+            session.setAttribute("auth", userService.getAuth(sessionUser.getPhoneNumber()));
             response.sendRedirect("profile");
         } else {
-            response.sendRedirect("signIn");
+            response.sendRedirect("signin");
         }
     }
 }

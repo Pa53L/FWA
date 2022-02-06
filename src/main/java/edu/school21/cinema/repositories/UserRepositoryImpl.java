@@ -1,5 +1,6 @@
 package edu.school21.cinema.repositories;
 
+import edu.school21.cinema.models.AuthHistory;
 import edu.school21.cinema.models.User;
 
 import edu.school21.cinema.models.UserRowMapper;
@@ -8,8 +9,17 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+@Transactional
 @Component
 public class UserRepositoryImpl implements UserRepository {
 
@@ -70,6 +80,54 @@ public class UserRepositoryImpl implements UserRepository {
             });
         } catch (DuplicateKeyException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public void addSignInInfo(User user, String address) {
+        String SQL = "insert into auth(user_id, type, address, time) values (?, ?, ?, ?)";
+        template.execute(SQL, (PreparedStatementCallback<Object>) ps -> {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            ps.setLong(1, user.getId());
+            ps.setString(2, "sign_in");
+            ps.setString(3, address);
+            ps.setString(4, dateFormat.format(new Date()));
+            return ps.execute();
+        });
+    }
+
+    @Override
+    public void addSignUpInfo(User user, String address) {
+        String SQL = "insert into auth(user_id, type, address, time) values (?, ?, ?, ?)";
+        template.execute(SQL, (PreparedStatementCallback<Object>) ps -> {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            ps.setLong(1, user.getId());
+            ps.setString(2, "sign_up");
+            ps.setString(3, address);
+            ps.setString(4, dateFormat.format(new Date()));
+            return ps.execute();
+        });
+    }
+
+    @Override
+    public List getAuthInfo(String phoneNumber) {
+        String SQL = "select * from auth where user_id=" + getUserByPhoneNumber(phoneNumber).getId();
+        return template.query(SQL, new AuthHistoryMapper());
+    }
+
+    private class AuthHistoryMapper implements RowMapper<AuthHistory> {
+        @Override
+        public AuthHistory mapRow(ResultSet rs, int rowNum) throws SQLException {
+            try {
+                AuthHistory authHistory = new AuthHistory();
+                authHistory.setUser_id(rs.getLong("user_id"));
+                authHistory.setType(rs.getString("type"));
+                authHistory.setAddress(rs.getString("address"));
+                authHistory.setTime(rs.getString("time"));
+                return authHistory;
+            } catch (EmptyResultDataAccessException e) {
+                return null;
+            }
         }
     }
 }
